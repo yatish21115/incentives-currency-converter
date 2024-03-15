@@ -1,12 +1,11 @@
-import {BatchGetItemCommand, DynamoDBClient} from "@aws-sdk/client-dynamodb";
+import {DynamoDBClient} from "@aws-sdk/client-dynamodb";
 import {
-    BatchGetCommand, BatchGetCommandInput,
     GetCommand,
     GetCommandInput,
     PutCommand
 } from "@aws-sdk/lib-dynamodb"
-import {logger} from "../logger/logger";
 import {fromIni} from "@aws-sdk/credential-provider-ini";
+import {InternalServerError} from "../errors/InternalServerError";
 
 const client = new DynamoDBClient({credentials: fromIni({ profile: process.env.AWS_PROFILE }), region: 'us-east-1'});
 
@@ -26,8 +25,7 @@ export const putItem = async (tableName: string, item: object): Promise<void> =>
     });
     try {
         await client.send(command);
-        logger.info(`Inserted record`, { tableName, item });
     } catch (error: any) {
-        logger.error(`Error occurred while putting item`, { error, tableName, item });
+        throw new InternalServerError(`Error occurred while putting item ${item}`);
     }
 };
