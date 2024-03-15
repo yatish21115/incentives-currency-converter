@@ -1,0 +1,29 @@
+# Ignore built files and directories
+/dist/
+/out/
+/.nyc_output/
+/coverage/
+
+# Ignore Node.js runtime environment
+/node_modules/
+
+# Ignore TypeScript compilation output
+*.js
+*.js.map
+*.d.ts
+
+# Ignore environment variables file (if used)
+.env
+
+# Ignore editor specific files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Ignore macOS specific files
+.DS_Store
+
+# Ignore Windows specific files
+Thumbs.db
+
