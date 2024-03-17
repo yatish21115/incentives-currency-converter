@@ -4,7 +4,7 @@ import {
     filterNonStringFields, generateNotValidStringMessage,
     generateParameterRequiredMessage,
     validateSchema
-} from "../utils/schema-utils";
+} from "../middlewares/schemaHandler";
 import {CurrencyDetails} from "../model/currencyDetails";
 
 export const createCurrencySchema: ValidationChain[] = [

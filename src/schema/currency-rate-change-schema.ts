@@ -1,5 +1,5 @@
 import {body, ValidationChain} from "express-validator";
-import {validateSchema} from "../utils/schema-utils";
+import {validateSchema} from "../middlewares/schemaHandler";
 import {NewCurrencyRateRequest} from "../model/currencyDetails";
 
 export const updateCurrencyRateSchema: ValidationChain[] = [

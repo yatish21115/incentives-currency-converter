@@ -1,7 +1,6 @@
 import {ValidationChain, validationResult} from "express-validator";
 import {NextFunction, Response, Request} from "express";
-import {isObjectEmpty} from "./common";
-import {BadRequestError} from "./errors/BadRequestError";
+import {isObjectEmpty} from "../utils/common";
 
 
 export const validateSchema = <T>(validations: ValidationChain[]) => {

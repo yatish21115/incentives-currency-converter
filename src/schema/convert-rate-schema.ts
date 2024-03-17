@@ -4,7 +4,7 @@ import {
     filterNonStringFields,
     generateNotValidStringMessage,
     generateParameterRequiredMessage, validateSchema
-} from "../utils/schema-utils";
+} from "../middlewares/schemaHandler";
 import {ConvertRateRequest} from "../model/currencyDetails";
 
 export const convertRateSchema: ValidationChain[] = [
