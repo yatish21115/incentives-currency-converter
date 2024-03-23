@@ -146,7 +146,12 @@
                 if (response.status === 200) {
                     window.location.href = '/currency-management';
                 } else {
-                    throw new Error('Failed to login');
+                    if(response.status === 401) {
+                        const data = (await response.json()).message;
+                        alert(data);
+                    } else {
+                        throw new Error('Failed to login');
+                    }
                 }
             } catch (error) {
                 console.error('Login failed:', error);

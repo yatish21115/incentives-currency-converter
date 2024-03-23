@@ -20,6 +20,11 @@ app.use(cookieSession({
     maxAge:  15 * 60 * 1000 //24 * 60 * 60 * 1000 (24 hours)
 }));
 app.use(express.json());
+
+app.get('/', (req, res) => {
+   res.redirect('/login');
+});
+
 app.use('/register', registerRouter);
 app.use('/login', loginRouter);
 app.use('/logout', logoutRouter);
