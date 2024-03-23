@@ -3,7 +3,8 @@ export type CurrencyDetails = {
     rateAgainstUSD: number,
     displayName: string,
     currencySymbol: string,
-    lastUpdatedAt: string
+    lastUpdatedAt: string,
+    updatedBy: string
 }
 
 export type NewCurrencyRateRequest = {

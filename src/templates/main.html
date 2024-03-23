@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currency Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #2c3e50;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #34495e;
+            border-radius: 10px;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
+            padding: 40px;
+            width: 500px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        h2 {
+            color: #fff;
+            margin-bottom: 30px;
+            font-size: 24px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            background-color: #2c3e50;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            width: calc(33.33% - 6px);
+            border-radius: 10px 10px 0 0;
+            transition: background-color 0.3s;
+        }
+
+        .tab.active {
+            background-color: #3498db;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 20px;
+            background-color: #2c3e50;
+            color: #fff;
+            border-radius: 0 0 10px 10px;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+            max-height: 0;
+        }
+
+        .tab-content.active {
+            display: block;
+            max-height: 500px; /* Adjust as needed */
+        }
+
+        .arrow-icon {
+            color: #fff;
+            font-size: 30px;
+            margin: 0 10px;
+        }
+
+        .styled-dropdown {
+            width: calc(100% - 30px);
+            padding: 10px;
+            margin-bottom: 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #2c3e50;
+            color: #fff;
+            font-size: 16px;
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        .styled-dropdown:focus {
+            background-color: #34495e;
+            box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .logout-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .logout-btn:hover {
+            background-color: #c0392b;
+        }
+
+        .response-message {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #2c3e50;
+            color: #fff;
+            border-radius: 5px;
+        }
+
+        input[type="text"] {
+            width: calc(100% - 30px);
+            padding: 10px;
+            margin-bottom: 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #2c3e50;
+            color: #fff;
+            font-size: 16px;
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        input[type="text"]:focus {
+            background-color: #34495e;
+            box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.5);
+        }
+
+        input[type="submit"] {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            text-transform: uppercase;
+            transition: background-color 0.3s;
+            outline: none;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Currency Management</h2>
+    <div class="tabs">
+        <button class="tab" id="createCurrencyTab">Create Currency</button>
+        <button class="tab" id="updateRateTab">Update Rate of the currency</button>
+        <button class="tab" id="convertCurrencyTab">Convert Currency</button>
+        <button class="logout-btn" id="logoutBtn">Logout</button>
+    </div>
+    <div class="tab-content" id="createCurrencyContent">
+        <form id="createCurrencyForm">
+            <input type="text" name="currencyCode" placeholder="Currency Code" required><br>
+            <input type="text" name="rateAgainstUSD" placeholder="Rate Against USD" required><br>
+            <input type="text" name="displayName" placeholder="Display Name" required><br>
+            <input type="text" name="currencySymbol" placeholder="Currency Symbol" required><br>
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+    <div class="tab-content" id="updateRateContent">
+        <form id="updateRateForm">
+            <select name="currencyCode" class="styled-dropdown" required>
+            </select><br>
+            <input type="text" name="rateAgainstUSD" placeholder="Rate Against USD" required><br>
+            <input type="submit" value="Update Rate">
+        </form>
+    </div>
+    <div class="tab-content" id="convertCurrencyContent">
+        <form id="convertCurrencyForm">
+            <select name="sourceCurrencyCode"  class="styled-dropdown" required></select>
+            <div class="arrow-icon">↓</div>
+            <select name="destinationCurrencyCode"  class="styled-dropdown" required></select>
+            <input type="text" name="amount" placeholder="Amount" required><br>
+            <input type="submit" value="Convert">
+        </form>
+    </div>
+</div>
+
+<script>
+    function showLoading(button) {
+        button.innerHTML = '<i class="fa fa-circle-notch fa-spin"></i>';
+        button.disabled = true;
+    }
+
+    function hideLoading(button, text) {
+        button.innerHTML = text;
+        button.disabled = false;
+    }
+
+    const createCurrencyTab = document.getElementById('createCurrencyTab');
+    const updateRateTab = document.getElementById('updateRateTab');
+    const convertCurrencyTab = document.getElementById('convertCurrencyTab');
+    const createCurrencyContent = document.getElementById('createCurrencyContent');
+    const updateRateContent = document.getElementById('updateRateContent');
+    const convertCurrencyContent = document.getElementById('convertCurrencyContent');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    createCurrencyTab.addEventListener('click', () => {
+        createCurrencyTab.classList.add('active');
+        updateRateTab.classList.remove('active');
+        convertCurrencyTab.classList.remove('active');
+
+        createCurrencyContent.classList.toggle('active');
+        updateRateContent.classList.remove('active');
+        convertCurrencyContent.classList.remove('active');
+    });
+
+    updateRateTab.addEventListener('click', () => {
+        createCurrencyTab.classList.remove('active');
+        updateRateTab.classList.add('active');
+        convertCurrencyTab.classList.remove('active');
+
+        createCurrencyContent.classList.remove('active');
+        updateRateContent.classList.toggle('active');
+        convertCurrencyContent.classList.remove('active');
+    });
+
+    convertCurrencyTab.addEventListener('click', () => {
+        createCurrencyTab.classList.remove('active');
+        updateRateTab.classList.remove('active');
+        convertCurrencyTab.classList.add('active');
+
+        createCurrencyContent.classList.remove('active');
+        updateRateContent.classList.remove('active');
+        convertCurrencyContent.classList.toggle('active');
+    });
+
+    logoutBtn.addEventListener('click', () => {
+        window.location.href = '/logout';
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const createCurrencyForm = document.getElementById('createCurrencyForm');
+        const submitButton = createCurrencyForm.querySelector('input[type="submit"]');
+
+        createCurrencyForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            showLoading(submitButton);
+            try {
+                const response = await fetch('/currencies', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        currencyCode: createCurrencyForm.elements['currencyCode'].value,
+                        rateAgainstUSD: createCurrencyForm.elements['rateAgainstUSD'].value,
+                        displayName: createCurrencyForm.elements['displayName'].value,
+                        currencySymbol: createCurrencyForm.elements['currencySymbol'].value
+                    })
+                });
+                const data = (await response.json()).message;
+                if (response.status === 201) {
+                    // Show success message
+                    const successMessage = document.createElement('p');
+                    successMessage.textContent = data;
+                    createCurrencyForm.appendChild(successMessage);
+                    createCurrencyForm.reset();
+                    setTimeout(() => {
+                        successMessage.remove();
+                    }, 5000);
+                } else {
+                    if (response.status === 302) {
+                        window.location.href = data.url;
+                    }
+                    alert(data.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            } finally {
+                hideLoading(submitButton, 'Submit');
+            }
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        const updateRateForm = document.getElementById('updateRateForm');
+        const currencyDropdown = updateRateForm.querySelector('select[name="currencyCode"]');
+        const updateRateButton = updateRateForm.querySelector('input[type="submit"]');
+        const rateInput = updateRateForm.querySelector('input[name="rateAgainstUSD"]');
+
+        updateRateForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            showLoading(updateRateButton);
+
+            const selectedCurrency = currencyDropdown.value;
+            const rate = rateInput.value;
+            try {
+                const response = await fetch(`/currencies/${selectedCurrency}/rate`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        rateAgainstUSD: rate
+                    })
+                });
+                const data = await response.json();
+                if (response.status === 200) {
+                    const successMessage = document.createElement('p');
+                    successMessage.textContent = data.message;
+                    updateRateForm.appendChild(successMessage);
+                    rateInput.value = '';
+                    setTimeout(() => {
+                        successMessage.remove();
+                    }, 5000);
+                } else {
+                    if (response.status === 302) {
+                        window.location.href = data.url;
+                    }
+                    alert(data.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            } finally {
+                hideLoading(updateRateButton, 'Update Rate');
+            }
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        const convertCurrencyForm = document.getElementById('convertCurrencyForm');
+        const sourceCurrencyDropdown = convertCurrencyForm.querySelector('select[name="sourceCurrencyCode"]');
+        const destinationCurrencyDropdown = convertCurrencyForm.querySelector('select[name="destinationCurrencyCode"]');
+        const amountInput = convertCurrencyForm.querySelector('input[name="amount"]');
+        const convertButton = convertCurrencyForm.querySelector('input[type="submit"]');
+
+        convertCurrencyForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            showLoading(convertButton);
+
+            const sourceCurrencyCode = sourceCurrencyDropdown.value;
+            const destinationCurrencyCode = destinationCurrencyDropdown.value;
+            const conversionQuantity = amountInput.value;
+
+            // Fetch API to send form data
+            try {
+                const response = await fetch(`/currencies/conversions`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        sourceCurrencyCode,
+                        destinationCurrencyCode,
+                        conversionQuantity
+                    })
+                });
+                const data = (await response.json()).message;
+                if (response.status === 200) {
+                    const responseMessage = document.createElement('div');
+                    responseMessage.classList.add('response-message');
+                    responseMessage.textContent = `Converted Value : ${data.destinationCurrencySymbol} ${data.convertedQuantity}`;
+                    convertCurrencyForm.appendChild(responseMessage);
+                    convertCurrencyForm.reset();
+                    setTimeout(() => {
+                        responseMessage.remove();
+                    }, 5000);
+                } else {
+                    if (response.status === 302) {
+                        window.location.href = data.url;
+                    }
+                    alert(data.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            } finally {
+                hideLoading(convertButton, 'Convert');
+            }
+        });
+    });
+
+    // Function to fetch currency data and populate dropdowns
+    async function fetchAndPopulateDropdowns() {
+        try {
+            const response = await fetch('/currencies/getAll', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            const currencies = (await response.json()).message;
+            if (response.status === 302) {
+                console.log(`${JSON.stringify(response)}`)
+                window.location.href = currencies.url;
+            } else {
+                const sourceCurrencyDropdown = document.querySelector('select[name="sourceCurrencyCode"]');
+                const destinationCurrencyDropdown = document.querySelector('select[name="destinationCurrencyCode"]');
+                const currencyDropdown = document.querySelector('select[name="currencyCode"]');
+
+                sourceCurrencyDropdown.innerHTML = '';
+                destinationCurrencyDropdown.innerHTML = '';
+                currencyDropdown.innerHTML = '';
+
+                currencies.forEach(currency => {
+                    const option1 = document.createElement('option');
+                    option1.value = currency.currencyCode;
+                    option1.textContent = `${currency.displayName} (${currency.currencyCode})`;
+                    const option2 = document.createElement('option');
+                    option2.value = currency.currencyCode;
+                    option2.textContent = `${currency.displayName} (${currency.currencyCode})`;
+                    const option3 = document.createElement('option');
+                    option3.textContent = `${currency.displayName} (${currency.currencyCode})`
+                    sourceCurrencyDropdown.appendChild(option1);
+                    destinationCurrencyDropdown.appendChild(option2);
+                    currencyDropdown.appendChild(option3)
+                });
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    updateRateTab.addEventListener('click', async () => {
+        await fetchAndPopulateDropdowns();
+    });
+
+    convertCurrencyTab.addEventListener('click', async () => {
+        await fetchAndPopulateDropdowns();
+    });
+
+
+</script>
