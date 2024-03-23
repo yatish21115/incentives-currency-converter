@@ -1,9 +1,5 @@
 import {DynamoDBClient} from "@aws-sdk/client-dynamodb";
-import {
-    GetCommand,
-    GetCommandInput,
-    PutCommand, ScanCommand, ScanCommandInput
-} from "@aws-sdk/lib-dynamodb"
+import {GetCommand, GetCommandInput, PutCommand, ScanCommand, ScanCommandInput} from "@aws-sdk/lib-dynamodb"
 import {fromIni} from "@aws-sdk/credential-provider-ini";
 import {InternalServerError} from "../errors/InternalServerError";
 

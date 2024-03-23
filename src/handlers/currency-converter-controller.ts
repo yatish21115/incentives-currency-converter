@@ -1,8 +1,4 @@
-import {
-    ConvertRateRequest,
-    CurrencyDetails,
-    NewCurrencyRateRequest,
-} from "../model/currencyDetails";
+import {ConvertRateRequest, CurrencyDetails, NewCurrencyRateRequest,} from "../model/currencyDetails";
 import {StatusCodes} from "../utils/StatusCodes";
 import {
     getAllCurrencyDetails,

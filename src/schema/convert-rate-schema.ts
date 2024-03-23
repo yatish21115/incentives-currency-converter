@@ -3,7 +3,8 @@ import {
     filterEmptyFields,
     filterNonStringFields,
     generateNotValidStringMessage,
-    generateParameterRequiredMessage, validateSchema
+    generateParameterRequiredMessage,
+    validateSchema
 } from "../middlewares/schemaHandler";
 import {ConvertRateRequest} from "../model/currencyDetails";
 

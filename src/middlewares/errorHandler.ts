@@ -1,4 +1,4 @@
-import {Request, Response, NextFunction} from "express";
+import {NextFunction, Request, Response} from "express";
 import {StatusCodes} from "../utils/StatusCodes";
 
 export const errorHandler = (err: Error, req: Request, res: Response, next: NextFunction) => {

@@ -4,7 +4,8 @@ import {ConvertRateRequest, CurrencyDetails, NewCurrencyRateRequest} from "../mo
 import {ResponseModel} from "../model/response";
 import {
     convertRateRequestHandler,
-    createCurrencyHandler, getAllCurrenciesHandler,
+    createCurrencyHandler,
+    getAllCurrenciesHandler,
     updateCurrencyRateHandler
 } from "../handlers/currency-converter-controller";
 import {param} from "express-validator";

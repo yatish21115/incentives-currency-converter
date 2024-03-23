@@ -1,7 +1,8 @@
 import {body, ValidationChain} from "express-validator";
 import {
     filterEmptyFields,
-    filterNonStringFields, generateNotValidStringMessage,
+    filterNonStringFields,
+    generateNotValidStringMessage,
     generateParameterRequiredMessage,
     validateSchema
 } from "../middlewares/schemaHandler";
