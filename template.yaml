@@ -26,12 +26,27 @@ Resources:
   CurrencyDetailsTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: yatish-currency-details
+      TableName: currency-converter-details
       AttributeDefinitions:
         - AttributeName: currencyCode
           AttributeType: S
       KeySchema:
         - AttributeName: currencyCode
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+      Tags:
+        - Key: Application
+          Value: Incentives-Assignment
+
+  UserDetailsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: user-login-credentials
+      AttributeDefinitions:
+        - AttributeName: emailId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: emailId
           KeyType: HASH
       BillingMode: PAY_PER_REQUEST
       Tags:

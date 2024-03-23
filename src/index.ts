@@ -1,48 +1,37 @@
-import express, {Express, Response, Request, NextFunction} from "express";
-import {convertRateRequestHandler, createCurrencyHandler, updateCurrencyRateHandler} from "./handlers/currency-converter-controller";
-import {ConvertRateRequest, CurrencyDetails, NewCurrencyRateRequest} from "./model/currencyDetails";
-import {validateCreateCurrencyDetailsRequest} from "./schema/currency-schema";
-import {param} from "express-validator";
-import {validateUpdateCurrencyRateRequest} from "./schema/currency-rate-change-schema";
-import {ResponseModel} from "./model/response";
-import {validateConvertRateRequest} from "./schema/convert-rate-schema";
+import express, {Express} from "express";
 import dotenv from "dotenv";
 import {errorHandler} from "./middlewares/errorHandler";
+import currencyRouter from "./routers/currency-router";
+import path from "node:path";
+import registerRouter from "./routers/register-router";
+import cookieSession from 'cookie-session';
+import {requireAuth} from "./middlewares/requireAuthHandler";
+import loginRouter from "./routers/login-router";
+import logoutRouter from "./routers/logout-router";
+import {sessionAuth} from "./middlewares/sessionAuthHandler";
 
 dotenv.config();
 const app: Express = express();
 const port = process.env.PORT || 3000;
+
+app.use(cookieSession({
+    name: 'session',
+    keys: ['your-secret-key'],
+    maxAge:  15 * 60 * 1000 //24 * 60 * 60 * 1000 (24 hours)
+}));
 app.use(express.json());
+app.use('/register', registerRouter);
+app.use('/login', loginRouter);
+app.use('/logout', logoutRouter);
+app.use('/currencies', sessionAuth, currencyRouter);
+
+app.get('/currency-management', requireAuth, (req, res) => {
+    res.sendFile(path.join(__dirname, 'templates', 'main.html'))
+});
+
 
 app.listen(port, () => {
     console.log(`[server]: Server is running at http://localhost:${port}`);
-});
-
-app.post("/currencies", validateCreateCurrencyDetailsRequest, async (req: Request<{}, {}, CurrencyDetails>, res: Response, next: NextFunction) => {
-    try{
-        const response: ResponseModel = await createCurrencyHandler(req);
-        res.status(response.statusCode).json({message: response.message});
-    } catch (error: any) {
-        next(error)
-    }
-});
-
-app.put("/currencies/:currencyCode/rate", [param('currencyCode').notEmpty(), validateUpdateCurrencyRateRequest], async (req: Request<{}, {}, NewCurrencyRateRequest>, res: Response, next: NextFunction) => {
-    try{
-        const response: ResponseModel = await updateCurrencyRateHandler(req);
-        res.status(response.statusCode).json({message: response.message});
-    } catch (error: any) {
-        next(error)
-    }
-});
-
-app.post("/currencies/conversions", validateConvertRateRequest, async (req: Request<{}, {}, ConvertRateRequest>, res: Response, next: NextFunction) => {
-    try{
-        const response: ResponseModel = await convertRateRequestHandler(req);
-        res.status(response.statusCode).json({message: response.message});
-    } catch (error: any) {
-        next(error)
-    }
 });
 
 app.use(errorHandler);

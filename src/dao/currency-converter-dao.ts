@@ -1,18 +1,18 @@
 import {CurrencyDetails} from "../model/currencyDetails";
-import {getItem, putItem} from "../utils/aws/db";
+import {getItem, putItem, scanAllItems} from "../utils/aws/db";
 import {InternalServerError} from "../utils/errors/InternalServerError";
 import dotenv from "dotenv";
 
 dotenv.config();
-const currencyDetailsTable = process.env.CurrencyDetailsTable!;
+const CurrencyDetailsTable = process.env.CurrencyDetailsTable!;
 
-const insertToCurrency = async (currencyDetails: CurrencyDetails) => {
-    return putItem(currencyDetailsTable, currencyDetails);
+const insert = async (currencyDetails: CurrencyDetails) => {
+    return putItem(CurrencyDetailsTable, currencyDetails);
 }
 
 const getCurrencyForCurrencyCode = async (currencyCode: string): Promise<CurrencyDetails> => {
     const record = await getItem<CurrencyDetails>({
-        TableName: currencyDetailsTable,
+        TableName: CurrencyDetailsTable,
         Key: {
             currencyCode
         }
@@ -23,7 +23,14 @@ const getCurrencyForCurrencyCode = async (currencyCode: string): Promise<Currenc
     return record;
 }
 
+const getAllCurrency = async (): Promise<CurrencyDetails[]> => {
+    return await scanAllItems<CurrencyDetails>({
+        TableName: CurrencyDetailsTable
+    });
+}
+
 export const currencyConverterDao = {
-    insertToCurrency,
+    insert,
     getCurrencyForCurrencyCode,
+    getAllCurrency
 }
