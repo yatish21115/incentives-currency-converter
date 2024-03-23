@@ -123,7 +123,6 @@
         <input type="text" name="lastName" id="lastName" placeholder="Last Name" required><br>
         <input type="email" name="emailId" id="emailId" placeholder="Email Id" required><br>
         <input type="password" name="password" id="password" placeholder="Password" required><br>
-        <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Re-enter Password" required><br>
         <button type="submit" id="signupBtn" class="signup-btn">Sign Up<span class="loading-icon" id="loading-icon"><i class="fas fa-spinner fa-spin"></i></span></button>
     </form>
     <a href="/login" class="signup-link">Already have an account? Login here</a>
@@ -132,16 +131,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const signupBtn = document.getElementById('signupBtn');
-        const confirmPasswordInput = document.getElementById('confirmPassword');
         const loadingIcon = document.getElementById('loading-icon');
-
-        confirmPasswordInput.addEventListener('input', () => {
-            const passwordInput = document.getElementById('password');
-            const password = passwordInput.value;
-            const confirmPassword = confirmPasswordInput.value;
-
-            signupBtn.disabled = !(!password || !confirmPassword || password === confirmPassword);
-        });
 
         signupBtn.addEventListener('click', async (e) => {
             e.preventDefault();
@@ -150,7 +140,6 @@
             signupBtn.disabled = true;
 
             const formData = new FormData(document.getElementById('registerForm'));
-            formData.delete('confirmPassword');
             try {
                 const response = await fetch('/register', {
                     method: 'POST',

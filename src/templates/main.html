@@ -414,6 +414,7 @@
                     option2.value = currency.currencyCode;
                     option2.textContent = `${currency.displayName} (${currency.currencyCode})`;
                     const option3 = document.createElement('option');
+                    option3.value = currency.currencyCode;
                     option3.textContent = `${currency.displayName} (${currency.currencyCode})`
                     sourceCurrencyDropdown.appendChild(option1);
                     destinationCurrencyDropdown.appendChild(option2);
