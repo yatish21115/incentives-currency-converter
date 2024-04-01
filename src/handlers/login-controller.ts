@@ -14,7 +14,7 @@ export const loginHandler = async (req: Request): Promise<ResponseModel> => {
             message: "Invalid email or password"
         }
     }
-    req.session!.user = loginDetails
+    req.session!.user = loginDetails.emailId
     return {
         statusCode: StatusCodes.OK,
         message: "Login successful"
