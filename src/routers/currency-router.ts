@@ -11,8 +11,11 @@ import {
 import {param} from "express-validator";
 import {validateUpdateCurrencyRateRequest} from "../schema/currency-rate-change-schema";
 import {validateConvertRateRequest} from "../schema/convert-rate-schema";
+import {sessionAuth} from "../middlewares/sessionAuthHandler";
 
 const router: Router = express.Router();
+
+router.use(sessionAuth);
 
 router.post("/", validateCreateCurrencyDetailsRequest, async (req: Request<{}, {}, CurrencyDetails>, res: Response, next: NextFunction) => {
     try{

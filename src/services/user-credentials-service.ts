@@ -5,7 +5,7 @@ import {InternalServerError} from "../utils/errors/InternalServerError";
 import {NotFoundError} from "../utils/errors/NotFoundError";
 
 export const validateUserCredentials = async (loginDetails: LoginDetails) => {
-    const userLoginDetails = await userCredentialsDao.getUserDetailsByEmail(loginDetails.emailId);
+    const userLoginDetails = await userCredentialsDao.getUserDetailsByEmailId(loginDetails.emailId);
     if(!userLoginDetails) return false;
     return compareSync(loginDetails.password, userLoginDetails.password);
 }
@@ -25,7 +25,7 @@ export const processUserDetailsCreationRequest = async (newUserDetails: UserDeta
 }
 
 export const updateUserDetailsRequest = async (emailId: string, newUserDetails: NewUserDetailsRequest): Promise<NewUserDetailsRequest> => {
-    const oldUserDetails: UserDetails | undefined = await userCredentialsDao.getUserDetailsByEmail(emailId);
+    const oldUserDetails: UserDetails | undefined = await userCredentialsDao.getUserDetailsByEmailId(emailId);
     if(!oldUserDetails) {
         throw new NotFoundError(`Email ${emailId} provided is not linked to any user`);
     }

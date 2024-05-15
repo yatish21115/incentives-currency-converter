@@ -11,7 +11,7 @@ import {ResponseModel} from "../model/response";
 
 export const createCurrencyHandler = async (request: Request): Promise<ResponseModel> => {
     const newCurrencyDetails: CurrencyDetails = request.body;
-    const updatedBy: string = request.session!.user.emailId;
+    const updatedBy: string = request.cookies.sessionId;
     const currencyDetails: CurrencyDetails = await processCurrencyCreationRequest(newCurrencyDetails, updatedBy);
     return {
         statusCode: StatusCodes.CREATED,
@@ -29,7 +29,7 @@ export const getAllCurrenciesHandler = async (): Promise<ResponseModel> => {
 
 export const updateCurrencyRateHandler = async (request: Request): Promise<ResponseModel> => {
     const currencyCode: string = request.params.currencyCode;
-    const updatedBy: string = request.session!.user.emailId;
+    const updatedBy: string = request.cookies.sessionId;
     const newCurrencyRateRequest: NewCurrencyRateRequest = request.body;
     const updatedCurrencyDetails: CurrencyDetails = await updateCurrencyRateRequest(currencyCode, newCurrencyRateRequest, updatedBy)
     return {
