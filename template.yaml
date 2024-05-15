@@ -52,3 +52,21 @@ Resources:
       Tags:
         - Key: Application
           Value: Incentives-Assignment
+
+  UserSessionTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: user-session-tracker
+      AttributeDefinitions:
+        - AttributeName: sessionId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: sessionId
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+      TimeToLiveSpecification:
+        AttributeName: expiresAt
+        Enabled: true
+      Tags:
+        - Key: Application
+          Value: Incentives-Assignment

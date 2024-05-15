@@ -12,7 +12,7 @@ router.get('/', (req, res) => {
 
 router.post('/', async (req: Request<{}, {}, LoginDetails>, res: Response, next: NextFunction) => {
     try {
-        const response: ResponseModel = await loginHandler(req);
+        const response: ResponseModel = await loginHandler(req, res);
         res.status(response.statusCode).json({message: response.message});
     } catch (error: any) {
         next(error)
