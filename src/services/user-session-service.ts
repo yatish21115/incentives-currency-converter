@@ -16,6 +16,6 @@ export const getNewCookieSession = async (emailId: string): Promise<string> => {
 
 const getExpiresAt = (): number => {
     const date = new Date();
-    const currentTimeInSeconds = date.setSeconds(date.getSeconds() + 10);
+    const currentTimeInSeconds = date.setHours(date.getHours() + 10);
     return Math.floor(currentTimeInSeconds);
 }
